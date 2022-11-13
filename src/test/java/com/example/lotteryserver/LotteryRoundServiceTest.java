@@ -38,4 +38,11 @@ class LotteryRoundServiceTest {
             lotteryRoundService.getLotteryRoundId(currentDateTime);
         });
     }
+
+    @Test
+    public void throw_an_exception_if_current_date_time_is_null() {
+        assertThrows(AssertionError.class, () -> {
+            lotteryRoundService.getLotteryRoundId(null);
+        });
+    }
 }
