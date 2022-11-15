@@ -36,4 +36,21 @@ public class LotteryController {
         enrollmentResult.setLotteryRoundId(currentRoundId);
         return ResponseEntity.ok(enrollmentResult);
     }
+
+    @PostMapping("/api/auto")
+    public ResponseEntity<EnrollmentResult> auto() {
+        long currentRoundId = lotteryRoundService.getLotteryRoundId(LocalDateTime.now());
+        List<Integer> lotteryNumbersToRegister = lotteryService.createRandomLotteryNumbers(currentRoundId);
+
+        boolean result = lotteryService.register(currentRoundId, lotteryNumbersToRegister);
+
+        if (!result) {
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(null);
+        }
+
+        EnrollmentResult enrollmentResult = new EnrollmentResult();
+        enrollmentResult.setLotteryNumbers(lotteryNumbersToRegister.stream().sorted().collect(Collectors.toList()));
+        enrollmentResult.setLotteryRoundId(currentRoundId);
+        return ResponseEntity.ok(enrollmentResult);
+    }
 }
