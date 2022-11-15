@@ -30,18 +30,13 @@ public class LotteryService {
         return true;
     }
 
-    private void validate(List<Integer> lotteryNumbers) {
-        if (lotteryNumbers.stream().distinct().count() != LOTTERY_NUMBER_COUNT) {
-            throw new DuplicatedNumbersInLotteryNumberException();
-        }
-    }
-
     public List<Integer> createRandomLotteryNumbers(long currentRoundId) {
         int retryCount = RANDOM_LOTTERY_NUBMER_CREATION_RETRY_COUNT;
         List<Integer> randomLotteryNumbers;
         String joinedLotteryNumbers;
         do {
             randomLotteryNumbers = getDistinctRandomNumbers();
+            validate(randomLotteryNumbers);
             joinedLotteryNumbers = formatLotteryNumbersToString(randomLotteryNumbers);
         } while(lotteryRepository.findByLotteryRoundIdAndLotteryNumbers(currentRoundId, joinedLotteryNumbers) != null && retryCount-- > 1);
 
@@ -50,6 +45,12 @@ public class LotteryService {
         }
 
         return randomLotteryNumbers;
+    }
+
+    private void validate(List<Integer> lotteryNumbers) {
+        if (lotteryNumbers.stream().distinct().count() != LOTTERY_NUMBER_COUNT) {
+            throw new DuplicatedNumbersInLotteryNumberException();
+        }
     }
 
     private List<Integer> getDistinctRandomNumbers() {
