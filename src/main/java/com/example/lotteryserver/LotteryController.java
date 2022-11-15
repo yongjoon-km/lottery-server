@@ -25,9 +25,9 @@ public class LotteryController {
         List<Integer> lotteryNumbersToRegister = lotteryEnrollmentForm.getLotteryNumbers();
         long currentRoundId = lotteryRoundService.getLotteryRoundId(LocalDateTime.now());
 
-        boolean result = lotteryService.register(currentRoundId, lotteryNumbersToRegister);
+        boolean isLotteryRegistered = lotteryService.register(currentRoundId, lotteryNumbersToRegister);
 
-        if (!result) {
+        if (!isLotteryRegistered) {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(null);
         }
 
@@ -42,9 +42,9 @@ public class LotteryController {
         long currentRoundId = lotteryRoundService.getLotteryRoundId(LocalDateTime.now());
         List<Integer> lotteryNumbersToRegister = lotteryService.createRandomLotteryNumbers(currentRoundId);
 
-        boolean result = lotteryService.register(currentRoundId, lotteryNumbersToRegister);
+        boolean isLotteryRegistered = lotteryService.register(currentRoundId, lotteryNumbersToRegister);
 
-        if (!result) {
+        if (!isLotteryRegistered) {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(null);
         }
 

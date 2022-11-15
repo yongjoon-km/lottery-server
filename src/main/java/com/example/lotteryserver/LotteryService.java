@@ -16,6 +16,7 @@ public class LotteryService {
     private static final int LOTTERY_NUMBER_COUNT = 6;
     private static final int LOTTERY_MIN_NUMBER = 1;
     private static final int LOTTERY_MAX_NUMBER = 45;
+    private static final int RANDOM_LOTTERY_NUBMER_CREATION_RETRY_COUNT = 10;
     private final LotteryRepository lotteryRepository;
 
     public boolean register(Long lotteryRoundId, List<Integer> lotteryNumbers) {
@@ -36,7 +37,7 @@ public class LotteryService {
     }
 
     public List<Integer> createRandomLotteryNumbers(long currentRoundId) {
-        int retryCount = 10;
+        int retryCount = RANDOM_LOTTERY_NUBMER_CREATION_RETRY_COUNT;
         List<Integer> randomLotteryNumbers;
         String joinedLotteryNumbers;
         do {
