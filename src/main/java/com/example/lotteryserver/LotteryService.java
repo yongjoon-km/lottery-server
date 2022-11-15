@@ -46,7 +46,7 @@ public class LotteryService {
         } while(lotteryRepository.findByLotteryRoundIdAndLotteryNumbers(currentRoundId, joinedLotteryNumbers) != null && retryCount-- > 1);
 
         if (retryCount == 0) {
-            throw new DuplicatedNumbersInLotteryNumberException();
+            throw new RandomLotteryNumberCreationFailedException();
         }
 
         return randomLotteryNumbers;
