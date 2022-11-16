@@ -66,17 +66,8 @@ class LotteryServiceTest {
 
     @Test
     public void create_random_lottery_numbers() {
-        when(lotteryRepository.findByLotteryRoundIdAndLotteryNumbers(eq(10L), anyString())).thenReturn(null);
-        List<Integer> lotteryNumbers = lotteryService.createRandomLotteryNumbers(10L);
+        List<Integer> lotteryNumbers = lotteryService.createRandomLotteryNumbers();
         assertNotNull(lotteryNumbers);
-    }
-
-    @Test
-    public void throw_an_exception_if_random_lottery_number_creation_retry_over_10_times() {
-        when(lotteryRepository.findByLotteryRoundIdAndLotteryNumbers(eq(10L), anyString())).thenReturn(new Lottery());
-        assertThrows(DuplicatedNumbersInLotteryNumberException.class ,() -> {
-            lotteryService.createRandomLotteryNumbers(10L);
-        });
-        verify(lotteryRepository, times(10)).findByLotteryRoundIdAndLotteryNumbers(eq(10L), anyString());
+        assertEquals(6, lotteryNumbers.stream().distinct().count());
     }
 }

@@ -40,7 +40,7 @@ public class LotteryController {
     @PostMapping("/api/auto")
     public ResponseEntity<EnrollmentResult> auto() {
         long currentRoundId = lotteryRoundService.getLotteryRoundId(LocalDateTime.now());
-        List<Integer> lotteryNumbersToRegister = lotteryService.createRandomLotteryNumbers(currentRoundId);
+        List<Integer> lotteryNumbersToRegister = lotteryService.createRandomLotteryNumbers();
 
         boolean isLotteryRegistered = lotteryService.register(currentRoundId, lotteryNumbersToRegister);
 
