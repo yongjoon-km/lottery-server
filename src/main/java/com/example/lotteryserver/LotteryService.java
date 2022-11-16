@@ -1,6 +1,7 @@
 package com.example.lotteryserver;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -13,9 +14,12 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class LotteryService {
-    private static final int LOTTERY_NUMBER_COUNT = 6;
-    private static final int LOTTERY_MIN_NUMBER = 1;
-    private static final int LOTTERY_MAX_NUMBER = 45;
+    @Value("${lottery.number.count}")
+    private final Integer lotteryNumberCount;
+    @Value("${lottery.number.min}")
+    private final Integer lotteryNumberMin;
+    @Value("${lottery.number.max}")
+    private final Integer lotteryNumberMax;
     private final LotteryRepository lotteryRepository;
 
     public boolean register(Long lotteryRoundId, List<Integer> lotteryNumbers) {
@@ -37,7 +41,7 @@ public class LotteryService {
     }
 
     private void validate(List<Integer> lotteryNumbers) {
-        if (lotteryNumbers.stream().distinct().count() != LOTTERY_NUMBER_COUNT) {
+        if (lotteryNumbers.stream().distinct().count() != lotteryNumberCount) {
             throw new DuplicatedNumbersInLotteryNumberException();
         }
     }
@@ -45,8 +49,8 @@ public class LotteryService {
     private List<Integer> getDistinctRandomNumbers() {
         Random random = new Random();
         Set<Integer> result = new HashSet<>();
-        while(result.size() < LOTTERY_NUMBER_COUNT) {
-            int number = random.nextInt(LOTTERY_MAX_NUMBER-1) + LOTTERY_MIN_NUMBER;
+        while(result.size() < lotteryNumberCount) {
+            int number = random.nextInt(lotteryNumberMax-1) + lotteryNumberMin;
             result.add(number);
         }
         return result.stream().toList();
@@ -54,7 +58,7 @@ public class LotteryService {
 
     private String formatLotteryNumbersToString(List<Integer> lotteryNumbers) {
         Assert.notEmpty(lotteryNumbers, "lottery numbers should not be empty");
-        Assert.isTrue(lotteryNumbers.size() == LOTTERY_NUMBER_COUNT, "lottery numbers should be fixed 6");
+        Assert.isTrue(lotteryNumbers.size() == lotteryNumberCount, "lottery numbers should be fixed 6");
 
         return lotteryNumbers
                 .stream()

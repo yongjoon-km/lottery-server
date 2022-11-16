@@ -20,10 +20,18 @@ class LotteryServiceTest {
     @Mock
     private LotteryRepository lotteryRepository;
 
+    private final int lotteryNumberCount = 6;
+    private final int lotteryNumberMin = 1;
+    private final int lotteryNumberMax = 45;
 
     @BeforeEach
     public void setup() {
-        lotteryService = new LotteryService(lotteryRepository);
+        lotteryService = new LotteryService(
+                lotteryNumberCount,
+                lotteryNumberMin,
+                lotteryNumberMax,
+                lotteryRepository
+        );
     }
 
     @Test
@@ -68,6 +76,6 @@ class LotteryServiceTest {
     public void create_random_lottery_numbers() {
         List<Integer> lotteryNumbers = lotteryService.createRandomLotteryNumbers();
         assertNotNull(lotteryNumbers);
-        assertEquals(6, lotteryNumbers.stream().distinct().count());
+        assertEquals(lotteryNumberCount, lotteryNumbers.stream().distinct().count());
     }
 }
