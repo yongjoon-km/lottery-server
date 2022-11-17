@@ -15,14 +15,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class LotteryService {
     @Value("${lottery.number.count}")
-    private final Integer lotteryNumberCount;
+    private Integer lotteryNumberCount;
     @Value("${lottery.number.min}")
-    private final Integer lotteryNumberMin;
+    private Integer lotteryNumberMin;
     @Value("${lottery.number.max}")
-    private final Integer lotteryNumberMax;
+    private Integer lotteryNumberMax;
     private final LotteryRepository lotteryRepository;
 
-    public boolean register(Long lotteryRoundId, List<Integer> lotteryNumbers) {
+    public Lottery register(Long lotteryRoundId, List<Integer> lotteryNumbers) {
         validate(lotteryNumbers);
         List<Integer> sortedLotteryNumbers = lotteryNumbers.stream().sorted().toList();
         String joinedLotteryNumbers = formatLotteryNumbersToString(sortedLotteryNumbers);
@@ -30,7 +30,7 @@ public class LotteryService {
         lottery.setLotteryNumbers(joinedLotteryNumbers);
         lottery.setLotteryRoundId(lotteryRoundId);
         lotteryRepository.save(lottery);
-        return true;
+        return lottery;
     }
 
     public List<Integer> createRandomLotteryNumbers() {

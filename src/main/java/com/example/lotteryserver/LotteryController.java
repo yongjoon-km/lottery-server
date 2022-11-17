@@ -1,7 +1,6 @@
 package com.example.lotteryserver;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,15 +24,12 @@ public class LotteryController {
         List<Integer> lotteryNumbersToRegister = lotteryEnrollmentForm.getLotteryNumbers();
         long currentRoundId = lotteryRoundService.getLotteryRoundId(LocalDateTime.now());
 
-        boolean isLotteryRegistered = lotteryService.register(currentRoundId, lotteryNumbersToRegister);
-
-        if (!isLotteryRegistered) {
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(null);
-        }
+        Lottery lottery = lotteryService.register(currentRoundId, lotteryNumbersToRegister);
 
         EnrollmentResult enrollmentResult = new EnrollmentResult();
         enrollmentResult.setLotteryNumbers(lotteryNumbersToRegister.stream().sorted().collect(Collectors.toList()));
         enrollmentResult.setLotteryRoundId(currentRoundId);
+        enrollmentResult.setLotteryId(lottery.getLotteryId());
         return ResponseEntity.ok(enrollmentResult);
     }
 
@@ -42,15 +38,12 @@ public class LotteryController {
         long currentRoundId = lotteryRoundService.getLotteryRoundId(LocalDateTime.now());
         List<Integer> lotteryNumbersToRegister = lotteryService.createRandomLotteryNumbers();
 
-        boolean isLotteryRegistered = lotteryService.register(currentRoundId, lotteryNumbersToRegister);
-
-        if (!isLotteryRegistered) {
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(null);
-        }
+        Lottery lottery = lotteryService.register(currentRoundId, lotteryNumbersToRegister);
 
         EnrollmentResult enrollmentResult = new EnrollmentResult();
         enrollmentResult.setLotteryNumbers(lotteryNumbersToRegister.stream().sorted().collect(Collectors.toList()));
         enrollmentResult.setLotteryRoundId(currentRoundId);
+        enrollmentResult.setLotteryId(lottery.getLotteryId());
         return ResponseEntity.ok(enrollmentResult);
     }
 }
